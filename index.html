@@ -1,0 +1,156 @@
+<html><head>
+
+  <script language="JavaScript" type="text/javascript" src="index_files/calc.js"></script>
+ 
+  <meta name="Author" content="Victor Matveev">
+  <meta name="description" content="Victor Matveev publication simulation files">
+  <meta name="Keywords" content="Simulation files for the J Neurosci article on Ca2+ current vs channel cooperativity of exocytosis">
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
+
+<title>Code for manuscript "Ca&lt;sup&gt;2+&lt;/sup&gt; current vs.
+Ca&lt;sup&gt;2+&lt;/sup&gt; channel cooperativity of exocytosis" (2009)
+Matveev Bertram Sherman</title>
+
+<link rel="STYLESHEET" type="text/css" href="index_files/victor.css">
+
+<style type="text/css">
+
+   A.SCRIPT:link {font-family:sans-serif; text-decoration:none;  font-size:8pt; font-style:bold; color:red; }
+   A.SCRIPT:visited {font-family:sans-serif; text-decoration:none;  font-size:8pt; font-style:bold;  color: maroon; }
+   A.SCRIPT:active {font-family:sans-serif; text-decoration:none;  font-size:8pt; font-style:bold;   color: magenta; }
+   A.SCRIPT:hover {font-family:sans-serif; text-decoration:underline;  font-size:8pt; font-style:bold;   color: magenta; }
+
+   CODE {font-size:8pt; color:#550055;}
+
+   TD.color {font-size:8pt; color:#000000; font-family:sans-serif; background-color:#F0F0F0; padding:6pt; }  
+
+
+   BODY {font-size:8pt; font-family:sans-serif; }  
+   TD   {font-size:8pt; font-family:sans-serif;  }  
+   SUP {font-size:6pt; font-family:sans-serif;  }  
+   SUB {font-size:6pt; font-family:sans-serif;  }  
+/*       BODY {font-size:small; font-family:sans-serif;  } */
+   H4 {color: darkred; }
+   HR  {width:650px; text-align:left; margin: 0 auto 0 0;}
+/*       UL {font-size:small;} */
+/*       LI {font-size:small;} */
+
+</style>
+
+<!-- base href="http://web.njit.edu/~matveev/Scripts/MvsN/" -->
+
+<!-- ===============================================================================
+                               B  O  D  Y
+=============================================================================== -->
+
+</head><body bgcolor="#ffffff">
+
+<script language="JavaScript" type="text/javascript">
+makeTitle("Model Code: Ca<sup>2+</sup> current vs. Ca<sup>2+</sup> channel cooperativity");
+</script><table width="620"><tbody><tr><td class="title" colspan="5" height="33" width="100%">Model Code: Ca<sup>2+</sup> current vs. Ca<sup>2+</sup> channel cooperativity</td></tr><tr><td class="TCALC"><a class="TMENU" href="http://web.njit.edu/%7Ematveev/calc.html" target="_self">CalC Download</a></td> <td class="TCALC"><a class="TMENU" href="http://web.njit.edu/%7Ematveev/calc/manual.html" target="_self">CalC Manual</a></td> <td class="TCALC"><a class="TMENU" href="http://web.njit.edu/%7Ematveev/calc/scripts.html" target="_self">CalC Scripts</a></td> <td class="TCALC"><a class="TMENU" href="http://web.njit.edu/%7Ematveev/calc/calc_pub.html" target="_self">CalC Publications</a></td> <td class="TMENU"><a class="TMENU" href="http://web.njit.edu/%7Ematveev/" target="_top">Victor's Homepage</a></td> </tr></tbody></table><br>
+<br>
+
+
+<!-- br><br>
+<hr>
+<br -->
+
+<!-- ===============================================================================
+                          MAIN  TABLE
+=============================================================================== -->
+
+<table width="600" cellpadding="2">
+
+<tbody><tr><td valign="top">
+</td><td>
+
+The scripts following below reproduce the simulation results presented in the manuscript:
+<br><br>
+<table border="1" cellpadding="3"><tbody><tr><td class="COLOR" align="center">
+Victor V. Matveev, Richard Bertram and Arthur Sherman (2009)<br>
+<b>Ca<sup>2+</sup> current vs. Ca<sup>2+</sup> channel cooperativity of exocytosis</b><br>
+Journal of Neuroscience, <b>29</b>(39): 12196-12209. 
+<a href="http://www.jneurosci.org/cgi/content/abstract/29/39/12196" target="_top">[ Abstract ]</a>
+<a href="http://www.jneurosci.org/cgi/content/full/29/39/12196" target="_top">[ Full Text ]</a>
+</td></tr></tbody></table>
+<br>
+<br>
+</td></tr>
+
+
+
+<tr><td valign="top">
+<font color="red">&#9830;</font>&nbsp;<a href="http://web.njit.edu/%7Ematveev/Scripts/MvsN/Fig1.par" class="SCRIPT">Fig1.par</a>
+</td><td>
+This CalC script generates the first figure of the manuscript. It requires a single command-line parameters, the 
+total buffer concentration (in &#956;M) (e.g. run <code>calc Fig1.par 100</code>). The simulation 
+produces an ASCII data file with five columns: 
+(1) single-channel Ca<sip>2+ current (varied from 0.001 to 1 pA);
+(2) maximal release produced by a 1ms-long
+current pulse;
+(3) corresponding maximal [Ca<sip>2+] at release site, 30 nm from channel; 
+(4) maximal volume-averaged [Ca<sip>2+]; 
+(5) time to peak release after simulation start. 
+
+<br><br>
+</sip></sip></sip></td></tr>
+
+<tr><td valign="top">
+<font color="red">&#9830;</font>&nbsp;<a href="http://web.njit.edu/%7Ematveev/Scripts/MvsN/Fig1.m" class="SCRIPT">Fig1.m</a>
+</td><td>
+A MATLAB m-file that generates Figure 1 using data produced by CalC script <code>Fig1.par</code> above.
+
+<br><br>
+</td></tr>
+
+<tr><td valign="top">
+<font color="red">&#9830;</font>&nbsp;<a href="http://web.njit.edu/%7Ematveev/Scripts/MvsN/Fig7_8.par" class="SCRIPT">Fig7_8.par</a>
+</td><td>
+This CalC script generates data for Figures 7 and 8 of the manuscript. The simulation 
+produces an ASCII data file used by MATLAB script <code>Fig7_8.m</code> below.
+<br><br>
+</td></tr>
+
+<tr><td valign="top">
+<font color="red">&#9830;</font>&nbsp;<a href="http://web.njit.edu/%7Ematveev/Scripts/MvsN/Fig7_8.m" class="SCRIPT">Fig7_8.m</a>
+</td><td>
+A MATLAB m-file that generates Figures 7 and 8 using data produced by CalC script <code>Fig7_8.par</code> above.
+
+<br><br>
+</td></tr>
+
+<tr><td valign="top">
+<font color="red">&#9830;</font>&nbsp;<a href="http://web.njit.edu/%7Ematveev/Scripts/MvsN/process2D.m" class="SCRIPT">process2D.m</a>
+</td><td>
+A simple MATLAB data parsing script required by MATLAB m-files and <code>Fig1.m</code> and <code>Fig7_8.m</code>.
+
+<br><br>
+</td></tr>
+</tbody></table>
+
+<hr>
+<br>
+Supported in part by the <b>National Science Foundation</b> grant
+<b>DMS 0817703</b> to Victor Matveev
+<br><br>
+
+<!-- =============================================================================== -->
+<!-- =============================================================================== -->
+
+<address>
+<small>
+<a href="http://web.njit.edu/%7Ematveev" target="_top">Victor Matveev</a>
+</small>
+</address>
+<small>
+This server is running a 
+<a href="http://www.redhat.com/" target="_top">Redhat</a> distribution of 
+<a href="http://www.linux.org/" target="_top">Linux</a>.
+<br>
+<!-- Created: Sun Apr 12 18:25:17 EDT 1998 -->
+<!-- hhmts start -->
+Last modified: January 8, 2010
+<!-- hhmts end -->
+</small>
+
+</body></html>

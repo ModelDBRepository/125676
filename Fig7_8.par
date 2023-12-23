@@ -1,0 +1,155 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%      Victor V. Matveev, Richard Bertram and Arthur Sherman (2009)
+%      Ca2+ current vs. Ca2+ channel cooperativity of exocytosis
+%          Journal of Neuroscience, 29(39): 12196-12209. 
+%
+%  This CalC simulation script produces data for Fig. 8 of the manuscript 
+%                 Victor Matveev, January 8, 2010
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+verbose = 0
+
+%%%% Create file names for data storage:
+
+file = $1 ".Dist" r1 ".Imax" Imax "pA." N "x" N "x" M ".dat"
+tfile = file ".temp"
+ICfile = file ".IC"
+
+%%%%% Geometry parameters:
+
+L = 1        % enclosure length is 1 um cube
+MID = 0.5    % midpoint
+r1 = 0.02    % Distance from channel to release site (midpoint) = 20nm 
+r2 = r1
+
+volume 0 L 0 L 0 L
+
+%%%% Spatial grid definition:
+
+N = 80
+M = 50
+grid N N M
+stretch x x1 x2
+stretch y MID MID
+stretch z 0 0
+stretch.factor = 1.05
+
+x1 = MID - r1
+x2 = MID + r2
+
+Ca.source x1 MID 0 ww ww ww   %%% Left  Ca2+ channel
+Ca.source x2 MID 0 ww ww ww   %%% Right Ca2+ channel
+ww = 0.004
+
+Ca.D = 0.2     %%% Ca2+ diffusion coefficient (um^2 / ms)
+Ca.bgr = 0.1   %%% Background Ca2+ concentration
+
+%%%%%%%%%% Simulation parameters:
+
+Imax = 0.05 %% Single-channel calcium current (pA)
+
+T0 = 1             %%% Pre-pulse sumulation duration (ms)
+T1 = 1             %%% Pulse duration (ms)
+T2 = 4             %%% Post-pulse simulation duration (ms)
+TM = T0 + T1 + T2  %%% Total simulation time
+
+Run adaptive T0
+currents 0 0
+
+Run adaptive T1
+currents I1 I2
+
+Run adaptive T2
+currents 0 0
+
+I  = Imax pA
+I1 = I ff{1}    %%% "ff" is a channel configuration selector array 
+I2 = I ff{2}    %%%         (defined in inner for-loop)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+buffer B        %%% Buffer definitions
+B.D = 0.05
+B.KD = 1
+B.kplus = 0.65
+
+uptake = 0.004
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Ca2+ binding scheme: Felmy Neher Schneggenburger (2003)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+C := Ca[MID,MID,0]   %% Ca2+ sensor is located at midpoint between two channels
+
+dX/dt  =                             - 5 C kon X  +   koff     X1
+dX1/dt =  5 kon C X  -   koff     X1 - 4 C kon X1 + 2 koff b   X2
+dX2/dt =  4 kon C X1 - 2 koff b   X2 - 3 C kon X2 + 3 koff b^2 X3
+dX3/dt =  3 kon C X2 - 3 koff b^2 X3 - 2 C kon X3 + 4 koff b^3 X4
+dX4/dt =  2 kon C X3 - 4 koff b^3 X4 -   C kon X4 + 5 koff b^4 X5
+dX5/dt =                                 C kon X4 - 5 koff b^4 X5 - gamma X5
+
+R := gamma X5   % Release rate
+
+kon = 0.116     % Binding scheme rate constants
+koff = 8.430
+gamma = 6.96  
+b = 0.25        % cooperativity parameter
+
+
+Tmax Rmax max R 0 TM  %%% Rmax = max release rate; Tmax = time at max release rate
+Cmax      max C 0 TM  %%% Cmax = max [Ca2+] at release site (at midpoint) 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+B0 = 1                             % Min total buffer concentration (uM)
+B1 = 10000                         % Max total buffer concentration (uM)
+dlog = (log(B1) - log(B0)) / 40    % Logarithmic step in concentration
+
+for logB = log(B0) to log(B1) step dlog  %% Outer loop over buffer concentration
+B.total = exp(logB)
+parStr = B.total
+
+
+for iter = 0 to 3 step 1   %%% Second for-loop spans open channel configurations:   
+                           
+if iter == 0 then
+  if logB == log(B0)
+    ff = 0 0               %%% Both channels closed (0 0)
+    T2 = 12
+    X(0) = 1
+    plot mute R R0.dat
+    print  ICfile "X(0)="  X
+    append ICfile "X1(0)=" X1
+    append ICfile "X2(0)=" X2
+    append ICfile "X3(0)=" X3
+    append ICfile "X4(0)=" X4
+    append ICfile "Rmax0=" Rmax "; Tmax0=" Tmax "; Cmax0=" Cmax
+  else
+    continue
+  endif
+else
+  include ICfile
+endif
+
+if iter == 1 then         %%% Left channel open (1 0)
+  ff = 1 0               
+  print  tfile "Rmax1=" Rmax "; Tmax1=" Tmax "; Cmax1=" Cmax
+endif
+
+if iter == 2 then         %%% Right channel open (0 1)
+  ff = 0 1
+  append tfile "Rmax2=" Rmax "; Tmax2=" Tmax "; Cmax2=" Cmax
+endif
+
+if iter == 3 then        %%% Both channels open (1 1)
+  include tfile
+  ff = 1 1
+  append file parStr "    " Rmax0 " " Rmax1 " " Rmax2 " " Rmax ...
+                     "    " Cmax1 " " Cmax2 " " Cmax ...
+                     "    " Tmax1 " " Tmax2 " " Tmax 
+
+endif
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
