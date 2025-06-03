@@ -5,14 +5,13 @@
 
 The scripts following below reproduce the simulation results presented in the manuscript:
 
-|                                                                                                                                        |
-|----------------------------------------------------------------------------------------------------------------------------------------|
-| Victor V. Matveev, Richard Bertram and Arthur Sherman (2009)  
-**Ca²⁺ current vs. Ca²⁺ channel cooperativity of exocytosis**  
+
+Victor V. Matveev, Richard Bertram and Arthur Sherman (2009)  
+**Ca²⁺ current vs. Ca²⁺ channel cooperativity of exocytosis**
 *Journal of Neuroscience*, **29**(39): 12196-12209.  
-[Abstract](http://www.jneurosci.org/cgi/content/abstract/29/39/12196) [Full Text](http://www.jneurosci.org/cgi/content/full/29/39/12196) |
+[Abstract](http://www.jneurosci.org/cgi/content/abstract/29/39/12196) | [Full Text](http://www.jneurosci.org/cgi/content/full/29/39/12196)
 
-
+----
 ♦ [Fig1.par](http://web.njit.edu/%7Ematveev/Scripts/MvsN/Fig1.par)  
 This CalC script generates the first figure of the manuscript. It requires a single command-line parameter, the total buffer concentration (in μM) (e.g. run `calc Fig1.par 100`). The simulation produces an ASCII data file with five columns:  
 1. single-channel Ca²⁺ current (varied from 0.001 to 1 pA);  
@@ -45,8 +44,7 @@ Supported in part by the **National Science Foundation** grant **DMS 0817703** t
 
 Victor Matveev  
 This server is running a [Redhat](http://www.redhat.com/) distribution of [Linux](http://www.linux.org/).  
-Last modified: January 8, 2010
 
 ---
-
-2025-06-02: Converted README to Markdown.
+Last modified: January 8, 2010  
+Converted README to Markdown: June 2, 2025
